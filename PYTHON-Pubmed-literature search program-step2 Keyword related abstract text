@@ -1,0 +1,46 @@
+import csv
+import pandas as pd
+import re
+import nltk.data
+from nltk import tokenize
+
+keyword =input('搜索关键词：')
+openfile=str(keyword)+".csv"
+endfile1=str(keyword)+'_keyword_list.txt'
+endfile2=str(keyword)+'_ab_list.txt'
+endfile3=str(keyword)+'_ab_find.txt'
+with open(openfile,'r', newline='',encoding='utf-8') as f:
+    reader=csv.reader(f)
+    keyword_list=[]
+    ab_list = []
+    num_list=[]
+    for rows in reader:
+        rows_clean = [x.strip() for x in rows]  # strip()方法用于移除字符串头尾指定的字符（默认为空格或换行符）或字符序列
+        rows_clean=[x.replace("\n","")for x in rows_clean]
+        num=rows_clean[0]
+        name=rows_clean[1]
+        link=rows_clean[2]
+        abstract=rows_clean[3]
+        keyword_list.append(rows_clean)
+        ab_list.append(abstract)
+        num_list.append(num)
+
+print(keyword_list)
+print(ab_list)
+
+
+with open(endfile1,'w', newline='',encoding='utf-8') as new:
+    for rows_clean in keyword_list:
+        for x in rows_clean:
+            new.write(x)
+with open(endfile2,'w', newline='',encoding='utf-8') as new:
+    for abstract in keyword_list:
+        for i in range(len(ab_list)-1):
+            x = ab_list[i]
+            y = num_list[i]
+            if i < len(ab_list):
+                i = i + 1
+                new.write(y + '\n' + x + '\n---------------------------------\n')
+with open(endfile3,'w', newline='',encoding='utf-8') as new:
+    for abstract in ab_list:
+        new.write(abstract)
